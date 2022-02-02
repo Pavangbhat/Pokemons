@@ -1,0 +1,19 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  color: white;
+  margin: 20px;
+}
+
+.paginationItem {
+  border: 1px #303436 solid;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding: 10px;
+  user-select: none;
+  cursor: pointer;
+}
+
+.active {
+  border-color: rgb(60, 133, 112);
+}
