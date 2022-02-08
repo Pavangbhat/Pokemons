@@ -7,6 +7,7 @@ import CircleLoader from "react-spinners/ClipLoader";
 import { POKEMON_PER_PAGE } from "./constants/constants";
 import Pagination from "./components/pagination";
 import SearchPokemon from "./components/search-input";
+import Sortby from "./components/sort";
 
 function App() {
   const [pokemons, setPokemons] = useState([]);
@@ -32,7 +33,6 @@ function App() {
 
   useEffect(() => {
     if (!searchInput) {
-      console.log(currentPage, filteredPokemons);
       updatePokemonsForCurrentPage(allPokemons);
     } else {
       console.log(currentPage, filteredPokemons);
@@ -59,6 +59,15 @@ function App() {
     setTooglePureComponent(!tooglePureComponent);
   };
 
+  const sortPokemons=(isAscending)=>{
+    const sortedPokemons=pokemons.sort((pokemon1,pokemon2)=>{
+      if (pokemon1.name.english > pokemon2.name.english) return isAscending;
+      if (pokemon1.name.english < pokemon2.name.english) return !isAscending;
+      return 0;
+    })
+    setPokemons([...sortedPokemons])
+  }
+
   return (
     <div>
       {isLoading ? (
@@ -67,12 +76,13 @@ function App() {
         </div>
       ) : (
         <div>
-          <div>
-            <SearchPokemon
+          <SearchPokemon
               searchInput={searchInput}
               setSearchResult={setSearchResult}
             />
-          </div>
+          <Sortby 
+          sortPokemons={sortPokemons}
+          />
           <div className="cardWrapper">
             {pokemons.map((pokemon) => {
               return <PokemonCard key={pokemon.id} info={pokemon} />;

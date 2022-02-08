@@ -1,0 +1,11 @@
+.sortby-wrapper {
+  margin: 20px;
+  color: white;
+  font-family: "Courgette", cursive;
+  font-size: large;
+}
+
+.sortby-wrapper span {
+  margin-left: 5px;
+  color: aqua;
+}
