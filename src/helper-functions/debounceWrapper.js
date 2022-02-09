@@ -4,7 +4,7 @@ const debounceWrapper = (fn, ms) => {
     if (timer) {
       clearInterval(timer);
     }
-    setTimeout(() => {
+    timer = setTimeout(() => {
       fn(...args);
     }, ms);
   };

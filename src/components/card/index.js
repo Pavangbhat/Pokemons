@@ -19,12 +19,12 @@ const colorCode = {
   Ice: "#C0C0C0",
   Dragon: "#fe6c6c",
   Dark: "#949494",
-  Ghost: "#008b8b"
-}
+  Ghost: "#008b8b",
+};
 
 const PokemonCard = ({ info }) => {
-  const { name: title, type: types } = info
-  const { HP, Defense, Attack } = info.base
+  const { name: title, type: types } = info;
+  const { HP, Defense, Attack } = info.base;
 
   const pokemonImage = `/images/${title.english.toLowerCase()}.jpg`;
   return (
@@ -33,23 +33,25 @@ const PokemonCard = ({ info }) => {
         <img className="pokemonImage" src={pokemonImage} alt={title.english} />
         <p className="title">{title.english}</p>
         <div className="typeWrapper">
-          {types.map((type) => <span className="type" style={{ color: `${colorCode[type]}` }}>{type}</span>)}
+          {types.map((type, index) => (
+            <span
+              key={index}
+              className="type"
+              style={{ color: `${colorCode[type]}` }}
+            >
+              {type}
+            </span>
+          ))}
         </div>
       </div>
       <div>
         <ul className="list">
-          <li className="listItem">
-            HP {HP}
-          </li>
-          <li className="listItem">
-            Defense {Defense}
-          </li>
-          <li className="listItem">
-            Attack {Attack}
-          </li>
+          <li className="listItem">HP {HP}</li>
+          <li className="listItem">Defense {Defense}</li>
+          <li className="listItem">Attack {Attack}</li>
         </ul>
       </div>
-    </div >
+    </div>
   );
 };
 

@@ -48,7 +48,7 @@ function App() {
     setPaginationLength(Math.ceil(data.length / POKEMON_PER_PAGE));
   };
 
-  const setSearchResult = (pokemon) => {
+  const setSearchResult = (pokemon, allPokemons) => {
     const searchResult = allPokemons.filter((dataItem) => {
       return dataItem.name.english
         .toLowerCase()
@@ -59,10 +59,14 @@ function App() {
     setTooglePureComponent(getUniqueId());
   };
 
-  const updatePokemonList = useCallback(
-    debounceWrapper(setSearchResult, 500),
+  const debouncedFunction = useCallback(
+    debounceWrapper(setSearchResult, 800),
     []
   );
+
+  const updatePokemonList = (searchTerm) => {
+    debouncedFunction(searchTerm, allPokemons);
+  };
 
   const sortPokemons = (isAscending) => {
     const sortedPokemons = pokemons.sort((pokemon1, pokemon2) => {
