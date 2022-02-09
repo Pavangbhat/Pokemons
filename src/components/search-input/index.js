@@ -6,6 +6,7 @@ const SearchPokemon = ({ searchInput, setSearchInput, updateData }) => {
     <div className="searchBoxWrapper">
       <label className="pokemonLabel">Search Pokémons </label>
       <input
+        autoFocus
         className="inputBox"
         value={searchInput}
         onChange={(e) => {
