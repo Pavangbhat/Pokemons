@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 import getPokemon from "./helper-functions/getPokemons";
 import PokemonCard from "./components/card";
@@ -8,6 +8,8 @@ import { POKEMON_PER_PAGE } from "./constants/constants";
 import Pagination from "./components/pagination";
 import SearchPokemon from "./components/search-input";
 import Sortby from "./components/sort";
+import { v4 as getUniqueId } from "uuid";
+import debounceWrapper from "./helper-functions/debounceWrapper";
 
 function App() {
   const [pokemons, setPokemons] = useState([]);
@@ -17,7 +19,7 @@ function App() {
   const [paginationLength, setPaginationLength] = useState(0);
   const [searchInput, setSearchInput] = useState("");
   const [filteredPokemons, setFilteredPokemons] = useState([]);
-  const [tooglePureComponent, setTooglePureComponent] = useState(false);
+  const [tooglePureComponent, setTooglePureComponent] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,7 +37,6 @@ function App() {
     if (!searchInput) {
       updatePokemonsForCurrentPage(allPokemons);
     } else {
-      console.log(currentPage, filteredPokemons);
       updatePokemonsForCurrentPage(filteredPokemons);
     }
   }, [currentPage, tooglePureComponent]);
@@ -48,7 +49,6 @@ function App() {
   };
 
   const setSearchResult = (pokemon) => {
-    setSearchInput(pokemon);
     const searchResult = allPokemons.filter((dataItem) => {
       return dataItem.name.english
         .toLowerCase()
@@ -56,17 +56,22 @@ function App() {
     });
     setFilteredPokemons(searchResult);
     setCurrentPage(1);
-    setTooglePureComponent(!tooglePureComponent);
+    setTooglePureComponent(getUniqueId());
   };
 
-  const sortPokemons=(isAscending)=>{
-    const sortedPokemons=pokemons.sort((pokemon1,pokemon2)=>{
+  const updatePokemonList = useCallback(
+    debounceWrapper(setSearchResult, 500),
+    []
+  );
+
+  const sortPokemons = (isAscending) => {
+    const sortedPokemons = pokemons.sort((pokemon1, pokemon2) => {
       if (pokemon1.name.english > pokemon2.name.english) return isAscending;
       if (pokemon1.name.english < pokemon2.name.english) return !isAscending;
       return 0;
-    })
-    setPokemons([...sortedPokemons])
-  }
+    });
+    setPokemons([...sortedPokemons]);
+  };
 
   return (
     <div>
@@ -77,12 +82,11 @@ function App() {
       ) : (
         <div>
           <SearchPokemon
-              searchInput={searchInput}
-              setSearchResult={setSearchResult}
-            />
-          <Sortby 
-          sortPokemons={sortPokemons}
+            searchInput={searchInput}
+            setSearchInput={setSearchInput}
+            updateData={updatePokemonList}
           />
+          <Sortby sortPokemons={sortPokemons} />
           <div className="cardWrapper">
             {pokemons.map((pokemon) => {
               return <PokemonCard key={pokemon.id} info={pokemon} />;
